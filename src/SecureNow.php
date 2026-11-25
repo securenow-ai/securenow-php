@@ -422,6 +422,10 @@ final class SecureNow
         if ($version !== null && $version !== '') {
             Otlp::setResourceAttribute('securenow.framework.version', $version);
         }
+        try {
+            Otlp::persistResource();
+        } catch (\Throwable $e) {
+        }
     }
 
     /** Send everything queued now (long-running commands; requests do this on their own). */

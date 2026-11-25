@@ -4,6 +4,9 @@ Monitor and protect a PHP app with one Composer package: request traces, logs, c
 request capture, and an in-app firewall (IP blocking, allowlist, rate limits, proof-of-work challenges,
 scraper blocking, session revocation). Laravel, Symfony, Slim, WordPress and plain PHP.
 
+Package: [securenow/securenow on Packagist](https://packagist.org/packages/securenow/securenow) ·
+guide: https://securenow.ai/docs/php · playbook for coding agents: [SKILL-PHP.md](SKILL-PHP.md).
+
 It is the PHP counterpart of the `securenow` npm package: the same credentials file, the same
 telemetry fields, the same dashboard, alert rules, CLI and MCP tools on the SecureNow side.
 
@@ -100,14 +103,23 @@ $app->add(new \SecureNow\Integrations\Psr15\SecureNowMiddleware());   // before 
 $app->addRoutingMiddleware();
 ```
 
-**WordPress**: `composer require securenow/securenow` next to `wp-config.php` (or copy the package to
-`wp-content/securenow`), then copy `vendor/securenow/securenow/src/Integrations/WordPress/securenow.php`
-to `wp-content/mu-plugins/`. For the firewall to answer before WordPress loads, add as the first line of
-`wp-config.php`:
+**WordPress**: `composer require securenow/securenow` next to `wp-config.php`, or without Composer, unpack
+the package into `wp-content/securenow`. Then:
 
-```php
-require __DIR__ . '/vendor/securenow/securenow/prepend.php';
-```
+1. Copy `src/Integrations/WordPress/securenow.php` from the package to `wp-content/mu-plugins/`.
+2. Add as the first line of `wp-config.php` (after `<?php`), so the firewall answers before WordPress loads:
+
+   ```php
+   require __DIR__ . '/vendor/securenow/securenow/prepend.php';      // Composer
+   require __DIR__ . '/wp-content/securenow/prepend.php';            // without Composer
+   ```
+
+3. Connect: `php vendor/securenow/securenow/bin/securenow login` (or `php wp-content/securenow/bin/securenow
+   init --api-key ... --app ...`). In a WordPress folder the credentials are written as `.securenow/runtime.php`,
+   with an `.htaccess` that denies the folder. On nginx, deny it yourself: `location ^~ /.securenow { deny all; }`.
+
+REST requests get the route pattern (`/wp-json/wp/v2/posts/(?P<id>[\d]+)`), pages the permalink rule that
+matched, and `wp-login.php` failures become `auth.login.failure` events.
 
 **Plain PHP, or no Composer autoloader**: point `auto_prepend_file` at the SDK, no code change:
 
@@ -249,8 +261,11 @@ nothing between requests and has no timer, so the SDK works like this:
 Rate-limit counters are shared through Redis (`firewall.rateLimitStore`), else APCu (one PHP-FPM pool),
 else files in the cache folder (one machine).
 
-Without `fastcgi_finish_request()` (Apache `mod_php`), sending happens at the end of the request with a
-3-second cap; run the agent there, so requests only write to the spool.
+Without `fastcgi_finish_request()` (Apache `mod_php`), a request cannot release its response early, so the
+SDK starts a short-lived background PHP process (`securenow work`, at most one per second) that checks the
+policy and sends the spool; requests only write to the spool. Where PHP cannot start processes (`proc_open`
+disabled, as on some shared hosting, or no PHP command-line binary), sending falls back to the end of the
+request, at most once per second with a 3-second cap: run the agent there.
 
 ### The agent (optional)
 
@@ -379,8 +394,11 @@ Apps, alert rules, the blocklist, forensics and the rest of the dashboard are la
   3 seconds and removed when the agent stopped. Dropping packets from a listed address was not exercised.
 - Measured there, with a 78,000-address policy: about 0.7 ms added to a plain PHP request, about 3 ms to a
   Laravel or Symfony request with the OpenTelemetry instrumentation on. Telemetry is sent after the response.
-- Not tested end to end yet: WordPress, Apache `mod_php`, LiteSpeed, FrankenPHP, RoadRunner, Swoole,
-  Laravel Octane, the cloud WAF pushes against real provider accounts.
+- WordPress 6 on Apache `mod_php` (the official Docker image), live on the same host, installed without
+  Composer: traces with REST and page routes, failed sign-ins as events, a block and an unblock enforced
+  within 10 seconds, response times unchanged, and the credentials folder answering 403 over HTTP.
+- Not tested end to end yet: LiteSpeed, FrankenPHP, RoadRunner, Swoole, Laravel Octane, the cloud WAF
+  pushes against real provider accounts, Windows servers (IIS).
 
 ## Development
 

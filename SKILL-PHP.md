@@ -2,7 +2,7 @@
 
 The integration playbook for the `securenow/securenow` Composer package. A coding agent that reads only
 this file can plug SecureNow into a PHP web app, turn on every feature, deploy it and prove it works.
-It describes 1.0.0. The Node.js playbook is `SKILL-API.md` in the npm package; the CLI reference is
+It describes 1.0.1. The Node.js playbook is `SKILL-API.md` in the npm package; the CLI reference is
 `SKILL-CLI.md`.
 
 ## Rules for the agent
@@ -64,9 +64,11 @@ It describes 1.0.0. The Node.js playbook is `SKILL-API.md` in the npm package; t
    ```
 
    ```php
-   // WordPress: first line of wp-config.php
+   // WordPress: first line of wp-config.php (after <?php)
    require __DIR__ . '/vendor/securenow/securenow/prepend.php';
-   // and copy vendor/securenow/securenow/src/Integrations/WordPress/securenow.php to wp-content/mu-plugins/
+   // without Composer, unpack the package into wp-content/securenow and use:
+   // require __DIR__ . '/wp-content/securenow/prepend.php';
+   // then copy src/Integrations/WordPress/securenow.php from the package to wp-content/mu-plugins/
    ```
 
    ```ini
@@ -221,8 +223,9 @@ Restart=always
 ```
 
 - PHP-FPM: telemetry is sent after the response (`fastcgi_finish_request`); the visitor does not wait.
-- Apache `mod_php` has no such call: sending happens at the end of the request with a 3-second cap.
-  Run the agent there, so requests only write to the spool.
+- Apache `mod_php` has no such call: the SDK starts a short-lived background PHP process (at most one
+  per second) that syncs and sends. If `proc_open` is disabled or there is no PHP CLI binary, sending
+  falls back to the end of the request (3-second cap): run the agent there.
 - Several servers: each keeps its own cache folder and syncs on its own. Use Redis for shared
   rate-limit counters.
 - The policy reaches a server within about 10 seconds of traffic. With the agent it arrives in under a
@@ -269,8 +272,10 @@ shows the app as being set up until a real request arrives.
   challenges, session revocation, Scraper Shield rules, hit reports, the agent's long-poll (a block is
   enforced in under a second) and the OS firewall layer (iptables with the nftables backend: rules
   loaded and removed; packet drops from a listed address not exercised).
-- Not tested end to end yet: WordPress, Apache `mod_php`, LiteSpeed, FrankenPHP, RoadRunner, Swoole,
-  Laravel Octane, the cloud WAF pushes against real provider accounts.
+- Tested live on the same host: WordPress 6 on Apache `mod_php` (official Docker image), installed
+  without Composer.
+- Not tested end to end yet: LiteSpeed, FrankenPHP, RoadRunner, Swoole, Laravel Octane, the cloud WAF
+  pushes against real provider accounts, Windows servers (IIS).
 - Not in PHP: the Node SDK's TCP-drop layer (PHP does not own the socket); the admin CLI and the MCP
   server (use `npx securenow` or the hosted MCP server).
 - Not supported: coroutine servers that interleave requests in one worker, serverless PHP runtimes

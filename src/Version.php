@@ -6,7 +6,7 @@ namespace SecureNow;
 
 final class Version
 {
-    public const SDK = '1.0.0';
+    public const SDK = '1.0.1';
     public const NAME = 'securenow-php';
     /**
      * The firewall API compares X-SecureNow-SDK-Version with npm `securenow` versions (Scraper

@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.0.1 (2026-11-25)
+
+Found by running WordPress on Apache `mod_php` against SecureNow.
+
+- **Apache `mod_php` and other servers that cannot finish the response early:** telemetry was sent
+  inside the request, so about one request per second waited for the upload (1.5 to 2 seconds). The
+  SDK now starts a short-lived background PHP process (`securenow work`, at most one per second) that
+  checks the policy and sends the spool; requests only write to the spool. Where PHP cannot start
+  processes, sending stays at the end of the request (3-second cap): run the agent there.
+- **Framework name on every batch:** `securenow.framework` was missing when the batch was sent by a
+  request the firewall answered, by the background worker or by the agent. It is now kept next to
+  the spool.
+- **WordPress routes:** front-end pages get `http.route` from the permalink rule WordPress matched
+  (`/` for the home page, `/?s=` for a search), next to REST routes.
+- **Agent in containers:** stops cleanly on SIGQUIT and SIGHUP too (the official PHP images stop their
+  containers with SIGQUIT), so the OS firewall chain is removed.
+- **Laravel:** `session.seen` is sent for a session the visitor came back with, not for the new
+  session Laravel opens on every request without a cookie.
+- **CLI:** `vendor/bin/securenow` finds Composer's autoloader when the package is symlinked; the CLI
+  and the web server agree on the cache folder (keyed by the credentials file); `firewall:check` no
+  longer rewrites the policy on disk.
+
+Tested live against SecureNow from an AWS EC2 host: WordPress 6 on Apache `mod_php` (traces, REST and
+page routes, failed sign-ins as events, a block and an unblock enforced within 10 seconds, credentials
+not readable over HTTP), besides the 1.0.0 matrix.
+
 ## 1.0.0 (2026-11-24)
 
 First release: the PHP counterpart of the `securenow` npm package. Same credentials file, same

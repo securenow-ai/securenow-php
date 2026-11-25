@@ -252,6 +252,32 @@ return [
         T::ok($meta['pauseUntil'] > \SecureNow\Util::nowMs());
     },
 
+    'the background worker sends the spool and reports back' => static function (): void {
+        $dir = T::boot();
+        $calls = [];
+        Transport::fake(static function (array $request) use (&$calls): array {
+            $calls[] = (string) $request['url'];
+            return ['status' => 200, 'headers' => ['etag' => '"e"'], 'body' => '{}'];
+        });
+        SecureNow::start();
+        Logger::emit(Logger::INFO, 'spooled by a request');
+        // What a request does on a server that cannot finish the response early: spool only.
+        $spool = new ReflectionMethod(Exporter::class, 'spool');
+        if (PHP_VERSION_ID < 80100) {
+            $spool->setAccessible(true);
+        }
+        T::eq(true, $spool->invoke(null));
+        T::ok(filesize($dir . '/spool-logs.jsonl') > 0);
+        file_put_contents($dir . '/worker.meta', serialize(['at' => 1, 'tries' => 4]));
+
+        Exporter::work();
+        T::ok(in_array('https://ingest.securenow.ai/v1/logs', $calls, true), 'logs sent: ' . implode(', ', $calls));
+        T::ok((bool) preg_grep('~/api/v1/firewall/sync~', $calls), 'the policy was checked');
+        $meta = unserialize((string) file_get_contents($dir . '/worker.meta'), ['allowed_classes' => false]);
+        T::eq(0, $meta['tries'], 'the worker reports back');
+        T::ok(!is_file($dir . '/spool-logs.jsonl') || filesize($dir . '/spool-logs.jsonl') === 0, 'the spool is empty');
+    },
+
     'configuration: files, env and defaults' => static function (): void {
         SecureNow::resetForTests();
         $dir = sys_get_temp_dir() . '/securenow-cfg-' . bin2hex(random_bytes(4));

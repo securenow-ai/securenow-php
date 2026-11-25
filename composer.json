@@ -20,6 +20,8 @@
     "homepage": "https://securenow.ai",
     "support": {
         "docs": "https://securenow.ai/docs/php",
+        "source": "https://github.com/securenow-ai/securenow-php",
+        "issues": "https://github.com/securenow-ai/securenow-php/issues",
         "email": "contact@securenow.ai"
     },
     "require": {

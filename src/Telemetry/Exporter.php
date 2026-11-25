@@ -27,6 +27,7 @@ final class Exporter
     private const SPOOL_MAX_BYTES = 4194304;
     private const POST_MAX_BYTES = 2097152;
     private const META = 'export.meta';
+    private const WORKER_META = 'worker.meta';
     private const AGENT_HEARTBEAT = 'agent.heartbeat';
     private const MAX_ITEMS_PER_REQUEST = 2000;
 
@@ -130,7 +131,14 @@ final class Exporter
             if (!$spooled && $hadData) {
                 // No writable cache folder: send this request's data directly.
                 self::sendDirect();
-            } elseif (!self::agentAlive()) {
+            } elseif (self::agentAlive()) {
+                // The agent ships the spool and keeps the policy fresh.
+                return;
+            } elseif (!$detached && PHP_SAPI !== 'cli-server' && self::handOffToWorker()) {
+                // The response cannot be released early here (Apache mod_php): a background
+                // process does the network work, the visitor does not wait for it.
+                return;
+            } else {
                 self::flush($detached, false);
             }
             foreach (self::$tasks as $task) {
@@ -146,6 +154,121 @@ final class Exporter
             self::$pending = ['traces' => [], 'logs' => [], 'events' => [], 'fw' => []];
             self::$tasks = [];
         }
+    }
+
+    /**
+     * Servers that cannot finish the response early (Apache mod_php): start `securenow work` in the
+     * background, at most once per flush interval. It syncs the policy when due and sends the spool.
+     * Returns false when PHP cannot start a process (exec functions disabled, no PHP CLI) or when
+     * earlier starts did not result in a flush; the caller then sends inline, as a fallback.
+     */
+    private static function handOffToWorker(): bool
+    {
+        if (!function_exists('proc_open') || Store::dir() === null) {
+            return false;
+        }
+        $php = self::cliBinary();
+        if ($php === null) {
+            return false;
+        }
+        $meta = Store::readArray(self::WORKER_META) ?? [];
+        $now = Util::nowMs();
+        // Started several times and never reported back: starting processes does not work here.
+        if ((int) ($meta['tries'] ?? 0) >= 5) {
+            // Try again now and then, in case it was a passing problem.
+            if ($now - (int) ($meta['at'] ?? 0) < 300000) {
+                return false;
+            }
+            $meta['tries'] = 3;
+        }
+        if ($now - (int) ($meta['at'] ?? 0) < max(1000, Config::int('export.flushIntervalMs', 1000, 0))) {
+            return true;
+        }
+        $meta['at'] = $now;
+        $meta['tries'] = (int) ($meta['tries'] ?? 0) + 1;
+        Store::writeArray(self::WORKER_META, $meta);
+
+        $script = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'securenow';
+        $env = ['SECURENOW_CACHE_DIR' => (string) Store::dir(), 'SECURENOW_AUTOSTART' => '0', 'PATH' => (string) getenv('PATH')];
+        $source = Config::source();
+        if (strncmp($source, 'env:', 4) === 0) {
+            $env[Config::ENV_CREDENTIALS] = (string) Config::env(Config::ENV_CREDENTIALS);
+        } elseif ($source !== 'none' && $source !== 'code') {
+            $env[Config::ENV_CREDENTIALS_FILE] = $source;
+        } else {
+            return false;
+        }
+        try {
+            if (DIRECTORY_SEPARATOR === '\\') {
+                $command = 'start /B "" ' . escapeshellarg($php) . ' ' . escapeshellarg($script) . ' work > NUL 2>&1';
+            } else {
+                $command = escapeshellarg($php) . ' ' . escapeshellarg($script) . ' work > /dev/null 2>&1 &';
+            }
+            $process = @proc_open($command, [0 => ['file', DIRECTORY_SEPARATOR === '\\' ? 'NUL' : '/dev/null', 'r']], $pipes, null, $env + self::baseEnv());
+            if (!is_resource($process)) {
+                return false;
+            }
+            proc_close($process);
+            return true;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /** Variables a child PHP needs to start (temp folder, home). @return array<string,string> */
+    private static function baseEnv(): array
+    {
+        $out = [];
+        foreach (['TMPDIR', 'TMP', 'TEMP', 'HOME', 'SystemRoot', 'SSL_CERT_FILE', 'SSL_CERT_DIR', 'HTTPS_PROXY', 'https_proxy', 'NO_PROXY', 'no_proxy'] as $name) {
+            $value = getenv($name);
+            if (is_string($value) && $value !== '') {
+                $out[$name] = $value;
+            }
+        }
+        return $out;
+    }
+
+    /** The PHP command-line binary next to the running PHP, or null. */
+    private static function cliBinary(): ?string
+    {
+        static $found = false;
+        if ($found !== false) {
+            return $found;
+        }
+        $candidates = [];
+        if (PHP_BINARY !== '' && preg_match('/^php(\d|\.|$)/i', basename(PHP_BINARY)) && stripos(basename(PHP_BINARY), 'fpm') === false && stripos(basename(PHP_BINARY), 'cgi') === false) {
+            $candidates[] = PHP_BINARY;
+        }
+        $candidates[] = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' . (DIRECTORY_SEPARATOR === '\\' ? '.exe' : '');
+        $candidates[] = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+        foreach (['/usr/local/bin/php', '/usr/bin/php'] as $path) {
+            $candidates[] = $path;
+        }
+        foreach ($candidates as $candidate) {
+            if (@is_file($candidate) && @is_executable($candidate)) {
+                return $found = $candidate;
+            }
+        }
+        return $found = null;
+    }
+
+    /**
+     * One pass of the background worker (`securenow work`): policy check when due, revocations
+     * when in use, then the spool. Each step has its own lock, so a worker that finds another one
+     * busy sending still checks the policy, and leaves.
+     */
+    public static function work(): void
+    {
+        // Reporting back first: it proves that starting a worker works, whatever this one finds to do.
+        $meta = Store::readArray(self::WORKER_META) ?? [];
+        Store::writeArray(self::WORKER_META, ['at' => (int) ($meta['at'] ?? Util::nowMs()), 'tries' => 0]);
+        if (Config::apiKey() !== null) {
+            \SecureNow\Firewall\Sync::maybe(true);
+            if (\SecureNow\Sessions\Sessions::stats()['synced']) {
+                \SecureNow\Sessions\Sessions::syncMaybe(true);
+            }
+        }
+        self::flush(true, false);
     }
 
     private static function spool(): bool

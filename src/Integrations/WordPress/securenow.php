@@ -3,7 +3,7 @@
 /**
  * Plugin Name: SecureNow
  * Description: SecureNow for WordPress: request traces, logs, and the in-app firewall (IP blocking, rate limits, challenges, scraper blocking).
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: SecureNow
  * Author URI: https://securenow.ai
  * License: ISC
@@ -84,6 +84,15 @@ if (!defined('ABSPATH')) {
                 $kind = 'feed';
             }
             \SecureNow\SecureNow::setAttribute('wordpress.template', $kind);
+            // http.route: the permalink rule WordPress matched (a pattern, the same for every post),
+            // "/" for the home page, "/?s=" for a search. A 404 has no route.
+            if ($kind === 'home') {
+                \SecureNow\SecureNow::setRoute('/');
+            } elseif ($kind === 'search') {
+                \SecureNow\SecureNow::setRoute('/?s=');
+            } elseif ($kind !== '404' && isset($GLOBALS['wp']) && is_object($GLOBALS['wp']) && !empty($GLOBALS['wp']->matched_rule)) {
+                \SecureNow\SecureNow::setRoute('/' . ltrim((string) $GLOBALS['wp']->matched_rule, '^/'));
+            }
         } catch (\Throwable $e) {
         }
     });

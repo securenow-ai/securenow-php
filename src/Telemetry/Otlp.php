@@ -25,11 +25,25 @@ final class Otlp
         self::$extraResource = [];
     }
 
+    private const RESOURCE_FILE = 'resource.extra';
+
     /** @param mixed $value */
     public static function setResourceAttribute(string $key, $value): void
     {
         self::$extraResource[$key] = $value;
         self::$resource = null;
+    }
+
+    /** Remember the app's own resource attributes (framework, version) for whoever sends the spool. */
+    public static function persistResource(): void
+    {
+        if (!self::$extraResource) {
+            return;
+        }
+        $stored = \SecureNow\Store\Store::readArray(self::RESOURCE_FILE);
+        if ($stored !== self::$extraResource) {
+            \SecureNow\Store\Store::writeArray(self::RESOURCE_FILE, self::$extraResource);
+        }
     }
 
     /**
@@ -100,7 +114,17 @@ final class Otlp
         if ($version !== null) {
             $attrs['service.version'] = $version;
         }
-        return self::$extraResource + $attrs;
+        // Telemetry is often sent by another process than the one that produced it (a request
+        // answered before the framework booted, the background worker, the agent): what the app
+        // said about itself is kept next to the spool.
+        $extra = self::$extraResource;
+        if (!$extra) {
+            $stored = \SecureNow\Store\Store::readArray(self::RESOURCE_FILE);
+            if (is_array($stored)) {
+                $extra = $stored;
+            }
+        }
+        return $extra + $attrs;
     }
 
     private static function serviceVersion(): ?string

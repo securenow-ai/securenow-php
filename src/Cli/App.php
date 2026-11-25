@@ -105,6 +105,15 @@ final class App
                 return $this->firewallCheck();
             case 'agent':
                 return $this->agent();
+            case 'work':
+                // Started in the background by web requests on servers that cannot finish the
+                // response early (Apache mod_php). Not for interactive use.
+                if (Config::appKey() !== null) {
+                    Diag::setLevel((string) Config::get('otel.logLevel', 'error'));
+                    Diag::setSink(null);
+                    Exporter::work();
+                }
+                return 0;
             default:
                 fwrite(STDERR, "Unknown command: $command\n\n");
                 $this->help();
