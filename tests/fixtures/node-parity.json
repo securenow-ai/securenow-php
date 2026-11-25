@@ -1,0 +1,1896 @@
+{
+ "secret": "test-secret-0123456789abcdef",
+ "values": [
+  {
+   "in": "hello world",
+   "out": "hello world"
+  },
+  {
+   "in": "token eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c end",
+   "out": "token [REDACTED] end"
+  },
+  {
+   "in": "Authorization: Bearer abcdefghijklmnop123456",
+   "out": "Authorization: [REDACTED]"
+  },
+  {
+   "in": "basic dXNlcjpwYXNzd29yZA==",
+   "out": "[REDACTED]"
+  },
+  {
+   "in": "key sk_live_abcdefgh12345678 and pk_test_ZZZZZZZZ1111",
+   "out": "key [REDACTED] and [REDACTED]"
+  },
+  {
+   "in": "contact me at john.doe+tag@example.co.uk please",
+   "out": "contact me at [REDACTED] please"
+  },
+  {
+   "in": "card 4111 1111 1111 1111 expires",
+   "out": "card [REDACTED] expires"
+  },
+  {
+   "in": "not a card 1234 5678 9012 3456",
+   "out": "not a card 1234 5678 9012 3456"
+  },
+  {
+   "in": "order 4111111111111111",
+   "out": "order [REDACTED]"
+  },
+  {
+   "in": "/reset?code=123456&next=/home",
+   "out": "/reset?code=REDACTED&next=/home"
+  },
+  {
+   "in": "/search?q=<script>alert(1)</script>&otp=9999",
+   "out": "/search?q=<script>alert(1)</script>&otp=REDACTED"
+  },
+  {
+   "in": "' OR 1=1 -- ",
+   "out": "' OR 1=1 -- "
+  },
+  {
+   "in": "../../etc/passwd",
+   "out": "../../etc/passwd"
+  },
+  {
+   "in": "mutation { login(email: \"a@b.co\", password: \"hunter2\", code: \"445566\") }",
+   "out": "mutation { login(email: \"[REDACTED]\", password: \"hunter2\", code: \"[REDACTED]\") }"
+  },
+  {
+   "in": "a@b",
+   "out": "a@b"
+  },
+  {
+   "in": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@example.com",
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@example.com"
+  },
+  {
+   "in": "eyJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "out": "eyJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+   "in": "snk_live_0123456789abcdef",
+   "out": "[REDACTED]"
+  },
+  {
+   "in": "{\"nested\":\"Bearer zzzzzzzzzzzz\"}",
+   "out": "{\"nested\":\"[REDACTED]\"}"
+  },
+  {
+   "in": "ünïcödé text with émail user@exämple.com",
+   "out": "ünïcödé text with émail user@exämple.com"
+  }
+ ],
+ "bodies": [
+  {
+   "contentType": "application/json",
+   "body": "{\"email\":\"a@b.co\",\"password\":\"hunter2\",\"name\":\"Bob\",\"note\":\"<script>alert(1)</script>\"}",
+   "result": {
+    "body": "{\"email\":\"[REDACTED]\",\"password\":\"[REDACTED]\",\"name\":\"Bob\",\"note\":\"<script>alert(1)</script>\"}",
+    "type": "json"
+   }
+  },
+  {
+   "contentType": "application/json",
+   "body": "{\"user\":{\"firstName\":\"A\",\"creditCard\":\"4111111111111111\",\"id\":7},\"items\":[{\"sku\":\"x\",\"token\":\"abc\"}],\"path\":\"../../etc/passwd\"}",
+   "result": {
+    "body": "{\"user\":{\"firstName\":\"[REDACTED]\",\"creditCard\":\"[REDACTED]\",\"id\":7},\"items\":[{\"sku\":\"x\",\"token\":\"[REDACTED]\"}],\"path\":\"../../etc/passwd\"}",
+    "type": "json"
+   }
+  },
+  {
+   "contentType": "application/json; charset=utf-8",
+   "body": "{\"code\":\"123456\",\"status_code\":200,\"otpCode\":\"1\",\"url\":\"https://x.test/a/b?c=d\"}",
+   "result": {
+    "body": "{\"code\":\"[REDACTED]\",\"status_code\":200,\"otpCode\":\"[REDACTED]\",\"url\":\"https://x.test/a/b?c=d\"}",
+    "type": "json"
+   }
+  },
+  {
+   "contentType": "application/json",
+   "body": "{\"q\":\"' OR 1=1 --\",\"list\":[1,2,3],\"empty\":{},\"arr\":[],\"unicode\":\"héllo ✓\",\"slash\":\"a/b\"}",
+   "result": {
+    "body": "{\"q\":\"' OR 1=1 --\",\"list\":[1,2,3],\"empty\":{},\"arr\":[],\"unicode\":\"héllo ✓\",\"slash\":\"a/b\"}",
+    "type": "json"
+   }
+  },
+  {
+   "contentType": "application/json",
+   "body": "[{\"password\":\"x\"},\"plain\",3]",
+   "result": {
+    "body": "[{\"password\":\"[REDACTED]\"},\"plain\",3]",
+    "type": "json"
+   }
+  },
+  {
+   "contentType": "application/json",
+   "body": "\"just a string with user@example.com\"",
+   "result": {
+    "body": "\"just a string with user@example.com\"",
+    "type": "json"
+   }
+  },
+  {
+   "contentType": "application/x-www-form-urlencoded",
+   "body": "username=bob&password=secret&comment=hello+world&q=%3Cscript%3E",
+   "result": {
+    "body": "{\"username\":\"bob\",\"password\":\"[REDACTED]\",\"comment\":\"hello world\",\"q\":\"<script>\"}",
+    "type": "form"
+   }
+  },
+  {
+   "contentType": "application/x-www-form-urlencoded",
+   "body": "a=1&a=2&empty=&novalue&user%5Bname%5D=x&code=123456",
+   "result": {
+    "body": "{\"a\":\"2\",\"empty\":\"\",\"novalue\":\"\",\"user[name]\":\"x\",\"code\":\"[REDACTED]\"}",
+    "type": "form"
+   }
+  },
+  {
+   "contentType": "application/graphql",
+   "body": "mutation { login(username: \"bob\", password: \"hunter2\") { token } }",
+   "result": {
+    "body": "mutation { login(username: \"bob\", password: \"[REDACTED]\") { token } }",
+    "type": "graphql"
+   }
+  },
+  {
+   "contentType": "application/graphql",
+   "body": "query { user(id: 5, email: \"a@b.co\") { name } }",
+   "result": {
+    "body": "query { user(id: 5, email: \"[REDACTED]\") { name } }",
+    "type": "graphql"
+   }
+  },
+  {
+   "contentType": "text/plain",
+   "body": "ignored",
+   "result": null
+  }
+ ],
+ "customFields": [
+  "internalNote"
+ ],
+ "headers": [
+  {
+   "name": "cookie",
+   "sensitive": true
+  },
+  {
+   "name": "authorization",
+   "sensitive": true
+  },
+  {
+   "name": "x-csrf-token",
+   "sensitive": true
+  },
+  {
+   "name": "x-api-key",
+   "sensitive": true
+  },
+  {
+   "name": "user-agent",
+   "sensitive": false
+  },
+  {
+   "name": "accept",
+   "sensitive": false
+  },
+  {
+   "name": "x-session-id",
+   "sensitive": true
+  },
+  {
+   "name": "x-otp",
+   "sensitive": true
+  },
+  {
+   "name": "content-type",
+   "sensitive": false
+  },
+  {
+   "name": "x-forwarded-for",
+   "sensitive": false
+  },
+  {
+   "name": "x-code",
+   "sensitive": true
+  },
+  {
+   "name": "x-verification-code",
+   "sensitive": true
+  },
+  {
+   "name": "proxy-authorization",
+   "sensitive": true
+  },
+  {
+   "name": "x-goog-api-key",
+   "sensitive": true
+  },
+  {
+   "name": "x-custom-secret-thing",
+   "sensitive": true
+  },
+  {
+   "name": "referer",
+   "sensitive": false
+  },
+  {
+   "name": "x-amz-signature",
+   "sensitive": true
+  },
+  {
+   "name": "x-auth-request",
+   "sensitive": true
+  },
+  {
+   "name": "if-none-match",
+   "sensitive": false
+  },
+  {
+   "name": "x-my-private-key",
+   "sensitive": true
+  }
+ ],
+ "headerCustom": [
+  "csrfToken",
+  "my-private"
+ ],
+ "logs": [
+  {
+   "in": "user logged in password=hunter2 from 1.2.3.4",
+   "out": "user logged in password=[REDACTED] from 1.2.3.4"
+  },
+  {
+   "in": "{\"level\":\"info\",\"password\":\"x\",\"user\":\"bob\"}",
+   "out": "{\"level\":\"info\",\"password\":\"[REDACTED]\",\"user\":\"bob\"}"
+  },
+  {
+   "in": "payload {\"apiKey\":\"abc123\",\"code\":\"1234\",\"error_code\":\"E42\"} done",
+   "out": "payload {\"apiKey\":\"[REDACTED]\",\"code\":\"[REDACTED]\",\"error_code\":\"E42\"} done"
+  },
+  {
+   "in": "GET /cb?token=abcdef&state=1 200",
+   "out": "GET /cb?token=[REDACTED]&state=1 200"
+  },
+  {
+   "in": "code=123456 verified",
+   "out": "code=[REDACTED] verified"
+  },
+  {
+   "in": "code=E1234 failed",
+   "out": "code=E1234 failed"
+  },
+  {
+   "in": "plain message",
+   "out": "plain message"
+  },
+  {
+   "in": "email sent to someone@example.com with Bearer abcdefghijkl",
+   "out": "email sent to [REDACTED] with [REDACTED]"
+  },
+  {
+   "in": "authorization=Basic dXNlcjpwYXNz cookie=sid=1",
+   "out": "authorization=[REDACTED] dXNlcjpwYXNz cookie=[REDACTED]"
+  }
+ ],
+ "searches": [
+  {
+   "in": "?a=1&sig=abc&b=2",
+   "out": "?a=1&sig=REDACTED&b=2"
+  },
+  {
+   "in": "?code=123456",
+   "out": "?code=REDACTED"
+  },
+  {
+   "in": "?X-Amz-Signature=zzz&x=1",
+   "out": "?X-Amz-Signature=REDACTED&x=1"
+  },
+  {
+   "in": "?q=hello",
+   "out": "?q=hello"
+  },
+  {
+   "in": "?otp=1&otpCode=2&normal=3",
+   "out": "?otp=REDACTED&otpCode=REDACTED&normal=3"
+  },
+  {
+   "in": "?",
+   "out": "?"
+  },
+  {
+   "in": "",
+   "out": ""
+  },
+  {
+   "in": "?a",
+   "out": "?a"
+  }
+ ],
+ "otpFields": [
+  {
+   "key": "code",
+   "otp": true
+  },
+  {
+   "key": "status_code",
+   "otp": false
+  },
+  {
+   "key": "otpCode",
+   "otp": true
+  },
+  {
+   "key": "x-otp",
+   "otp": true
+  },
+  {
+   "key": "user[code]",
+   "otp": true
+  },
+  {
+   "key": "http.request.header.x_code",
+   "otp": true
+  },
+  {
+   "key": "error_code",
+   "otp": false
+  },
+  {
+   "key": "OTP",
+   "otp": true
+  },
+  {
+   "key": "passcode",
+   "otp": true
+  },
+  {
+   "key": "zipcode",
+   "otp": false
+  },
+  {
+   "key": "mfa_code",
+   "otp": true
+  },
+  {
+   "key": "2fa-code",
+   "otp": true
+  }
+ ],
+ "pathCases": [
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/login",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/API/LOGIN/",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api//login",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/%6Cogin",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/login/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/admin/users",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/Admin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/users/42",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/files/report.pdf",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/wp-admin/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/wp-login.php",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/login?x=1",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/login",
+    "pathMatchMode": "exact"
+   },
+   "path": "/aaaa",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/login",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/API/LOGIN/",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api//login",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/%6Cogin",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/login/x",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/admin/users",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/Admin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/users/42",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/files/report.pdf",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/wp-admin/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/wp-login.php",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/login?x=1",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/api/*",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/aaaa",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/api/login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/API/LOGIN/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/api//login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/api/%6Cogin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/api/login/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/admin/users",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/Admin",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/users/42",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/files/report.pdf",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/wp-admin/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/wp-login.php",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/api/login?x=1",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/admin"
+   },
+   "path": "/aaaa",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/API/LOGIN/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api//login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/%6Cogin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/admin/users",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/Admin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/users/42",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/files/report.pdf",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/wp-admin/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/wp-login.php",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login?x=1",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/users/\\d+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/aaaa",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/API/LOGIN/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api//login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/%6Cogin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/admin/users",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/Admin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/users/42",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/files/report.pdf",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/wp-admin/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/wp-login.php",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login?x=1",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "(a+)+$",
+    "pathMatchMode": "regex"
+   },
+   "path": "/aaaa",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/login",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/API/LOGIN/",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api//login",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/%6Cogin",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/login/x",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/admin/users",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/Admin",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/users/42",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/users/abc",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/files/report.pdf",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/wp-admin/x",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/wp-login.php",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/%zz/bad",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/api/login?x=1",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "",
+    "pathMatchMode": "prefix"
+   },
+   "path": "/aaaa",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/API/LOGIN/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api//login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/%6Cogin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/login/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/admin/users",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/Admin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/users/42",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/files/report.pdf",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/wp-admin/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/wp-login.php",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/api/login?x=1",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "/Files/Report.PDF",
+    "pathMatchMode": "exact"
+   },
+   "path": "/aaaa",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/API/LOGIN/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api//login",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/%6Cogin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login/x",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/admin/users",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/Admin",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/users/42",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/users/abc",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/files/report.pdf",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/wp-admin/x",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/wp-login.php",
+   "match": true
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/%zz/bad",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/api/login?x=1",
+   "match": false
+  },
+  {
+   "rule": {
+    "pathPattern": "^/wp-(admin|login)",
+    "pathMatchMode": "regex"
+   },
+   "path": "/aaaa",
+   "match": false
+  }
+ ],
+ "canonical": [
+  {
+   "path": "/api/login",
+   "plain": "/api/login",
+   "stripped": "/api/login"
+  },
+  {
+   "path": "/API/LOGIN/",
+   "plain": "/api/login/",
+   "stripped": "/api/login"
+  },
+  {
+   "path": "/api//login",
+   "plain": "/api/login",
+   "stripped": "/api/login"
+  },
+  {
+   "path": "/api/%6Cogin",
+   "plain": "/api/login",
+   "stripped": "/api/login"
+  },
+  {
+   "path": "/api/login/x",
+   "plain": "/api/login/x",
+   "stripped": "/api/login/x"
+  },
+  {
+   "path": "/admin/users",
+   "plain": "/admin/users",
+   "stripped": "/admin/users"
+  },
+  {
+   "path": "/Admin",
+   "plain": "/admin",
+   "stripped": "/admin"
+  },
+  {
+   "path": "/users/42",
+   "plain": "/users/42",
+   "stripped": "/users/42"
+  },
+  {
+   "path": "/users/abc",
+   "plain": "/users/abc",
+   "stripped": "/users/abc"
+  },
+  {
+   "path": "/",
+   "plain": "/",
+   "stripped": "/"
+  },
+  {
+   "path": "/files/report.pdf",
+   "plain": "/files/report.pdf",
+   "stripped": "/files/report.pdf"
+  },
+  {
+   "path": "/wp-admin/x",
+   "plain": "/wp-admin/x",
+   "stripped": "/wp-admin/x"
+  },
+  {
+   "path": "/wp-login.php",
+   "plain": "/wp-login.php",
+   "stripped": "/wp-login.php"
+  },
+  {
+   "path": "/%zz/bad",
+   "plain": "/%zz/bad",
+   "stripped": "/%zz/bad"
+  },
+  {
+   "path": "/api/login?x=1",
+   "plain": "/api/login?x=1",
+   "stripped": "/api/login?x=1"
+  },
+  {
+   "path": "/aaaa",
+   "plain": "/aaaa",
+   "stripped": "/aaaa"
+  }
+ ],
+ "uaProblems": [
+  {
+   "pattern": "GPTBot",
+   "refused": false
+  },
+  {
+   "pattern": "Bytespider",
+   "refused": false
+  },
+  {
+   "pattern": "python-requests/\\d+",
+   "refused": false
+  },
+  {
+   "pattern": "(a+)+",
+   "refused": true
+  },
+  {
+   "pattern": "a.*b.*c",
+   "refused": true
+  },
+  {
+   "pattern": "(?=x)y",
+   "refused": true
+  },
+  {
+   "pattern": "(a|ab)+",
+   "refused": true
+  },
+  {
+   "pattern": "scrapy",
+   "refused": false
+  },
+  {
+   "pattern": "[a-z]+bot",
+   "refused": false
+  },
+  {
+   "pattern": "\\1x",
+   "refused": true
+  },
+  {
+   "pattern": "(",
+   "refused": true
+  },
+  {
+   "pattern": "curl/[0-9.]+",
+   "refused": false
+  },
+  {
+   "pattern": "(web )?crawler",
+   "refused": false
+  },
+  {
+   "pattern": "(ab?){2}",
+   "refused": false
+  },
+  {
+   "pattern": "(a{1,30}){1,30}",
+   "refused": true
+  },
+  {
+   "pattern": "x{2,}y{3,}",
+   "refused": true
+  },
+  {
+   "pattern": "x+?y",
+   "refused": false
+  },
+  {
+   "pattern": "foo\\",
+   "refused": true
+  },
+  {
+   "pattern": "[abc",
+   "refused": true
+  },
+  {
+   "pattern": "",
+   "refused": true
+  },
+  {
+   "pattern": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "refused": true
+  },
+  {
+   "pattern": "(?<name>bot)",
+   "refused": false
+  },
+  {
+   "pattern": "(?:Headless)?Chrome",
+   "refused": false
+  },
+  {
+   "pattern": "a|b",
+   "refused": false
+  },
+  {
+   "pattern": "x{3}",
+   "refused": false
+  },
+  {
+   "pattern": "x{2,5}",
+   "refused": false
+  },
+  {
+   "pattern": "^Mozilla/5\\.0 \\(compatible; (\\w+)bot",
+   "refused": false
+  }
+ ],
+ "uaRuleSet": {
+  "rules": [
+   {
+    "id": "gptbot",
+    "pattern": "GPTBot",
+    "category": "ai"
+   },
+   {
+    "id": "bytespider",
+    "pattern": "Bytespider",
+    "category": "ai"
+   },
+   {
+    "id": "pyreq",
+    "pattern": "python-requests/\\d+",
+    "category": "lib"
+   },
+   {
+    "id": "bad",
+    "pattern": "(a+)+",
+    "category": "x"
+   },
+   {
+    "id": "phantom",
+    "pattern": "PhantomJS",
+    "category": "headless"
+   },
+   {
+    "id": "curl",
+    "pattern": "^curl/",
+    "category": "lib"
+   }
+  ],
+  "allow": [
+   {
+    "id": "prerender",
+    "pattern": "Prerender"
+   }
+  ],
+  "exemptIps": [
+   "203.0.113.0/24",
+   "2001:db8::1"
+  ]
+ },
+ "uaMatches": [
+  {
+   "ua": "Mozilla/5.0 (Windows NT 10.0) Chrome/120",
+   "ip": "198.51.100.1",
+   "rule": null
+  },
+  {
+   "ua": "Mozilla/5.0 AppleWebKit (compatible; GPTBot/1.0)",
+   "ip": "198.51.100.1",
+   "rule": "gptbot"
+  },
+  {
+   "ua": "gptbot lowercase",
+   "ip": "198.51.100.1",
+   "rule": "gptbot"
+  },
+  {
+   "ua": "python-requests/2.31",
+   "ip": "198.51.100.1",
+   "rule": "pyreq"
+  },
+  {
+   "ua": "python-requests/2.31",
+   "ip": "203.0.113.9",
+   "rule": null
+  },
+  {
+   "ua": "Mozilla/5.0 PhantomJS Prerender",
+   "ip": "198.51.100.1",
+   "rule": null
+  },
+  {
+   "ua": "Mozilla/5.0 PhantomJS",
+   "ip": "198.51.100.1",
+   "rule": "phantom"
+  },
+  {
+   "ua": "curl/8.0",
+   "ip": "2001:db8::1",
+   "rule": null
+  },
+  {
+   "ua": "curl/8.0",
+   "ip": "2001:db8::2",
+   "rule": "curl"
+  },
+  {
+   "ua": "",
+   "ip": "198.51.100.1",
+   "rule": null
+  }
+ ],
+ "ipList": [
+  "1.2.3.4",
+  "10.0.0.0/8",
+  "192.168.1.0/24",
+  "2001:db8::/32",
+  "2001:DB8:0::1",
+  "::ffff:5.6.7.8",
+  "203.0.113.7/32",
+  "0.0.0.0/x",
+  "not-an-ip",
+  "172.16.0.0/12",
+  "::ffff:9.9.9.0/120",
+  "fe80::1",
+  "100.64.0.0/10",
+  "8.8.8.8/33",
+  "1.1.1.1/y"
+ ],
+ "ipMatches": [
+  {
+   "ip": "1.2.3.4",
+   "blocked": true
+  },
+  {
+   "ip": "1.2.3.5",
+   "blocked": false
+  },
+  {
+   "ip": "10.255.255.255",
+   "blocked": true
+  },
+  {
+   "ip": "11.0.0.0",
+   "blocked": false
+  },
+  {
+   "ip": "192.168.1.77",
+   "blocked": true
+  },
+  {
+   "ip": "192.168.2.1",
+   "blocked": false
+  },
+  {
+   "ip": "2001:db8::dead",
+   "blocked": true
+  },
+  {
+   "ip": "2001:db9::1",
+   "blocked": false
+  },
+  {
+   "ip": "2001:db8::1",
+   "blocked": true
+  },
+  {
+   "ip": "5.6.7.8",
+   "blocked": true
+  },
+  {
+   "ip": "::ffff:5.6.7.8",
+   "blocked": true
+  },
+  {
+   "ip": "::ffff:1.2.3.4",
+   "blocked": true
+  },
+  {
+   "ip": "203.0.113.7",
+   "blocked": true
+  },
+  {
+   "ip": "203.0.113.8",
+   "blocked": false
+  },
+  {
+   "ip": "not-an-ip",
+   "blocked": true
+  },
+  {
+   "ip": "172.31.255.255",
+   "blocked": true
+  },
+  {
+   "ip": "172.32.0.0",
+   "blocked": false
+  },
+  {
+   "ip": "9.9.9.200",
+   "blocked": true
+  },
+  {
+   "ip": "9.9.10.1",
+   "blocked": false
+  },
+  {
+   "ip": "fe80::1",
+   "blocked": true
+  },
+  {
+   "ip": "fe80::2",
+   "blocked": false
+  },
+  {
+   "ip": "100.127.0.1",
+   "blocked": true
+  },
+  {
+   "ip": "",
+   "blocked": false
+  },
+  {
+   "ip": "[2001:db8::5]",
+   "blocked": true
+  },
+  {
+   "ip": "8.8.8.8",
+   "blocked": false
+  }
+ ],
+ "challenge": {
+  "ip": "198.51.100.23",
+  "ua": "Mozilla/5.0 Test",
+  "token": "c1.eyJpcCI6IjE5OC41MS4xMDAuMjMiLCJhbGciOiJwb3ctc2hhMjU2IiwiZGlmZiI6MTAsInJpZCI6InJ1bGUtMSIsImlhdCI6MTc5NTU1MTYzNywiZXhwIjoyMTEwOTExNjM3fQ.AjD3rnnHZRDzi3Aa5uG-NJdUfXFKsUXm1CkRfRccA4E",
+  "nonce": "6422",
+  "clearance": "k1.eyJpcCI6IjE5OC41MS4xMDAuMjMiLCJ1YWgiOiI5MDdhNzYwNjZlODI3NzE1IiwicmlkIjoicnVsZS0xIiwiaWF0IjoxNzk1NTUxNjM3LCJleHAiOjIxMTA5MTE2Mzd9.4dbhOyQLmcRtoKktddU9_dNQNkQ1KfNjjk7esHKOKyg"
+ },
+ "ipCases": [
+  {
+   "remote": "203.0.113.5",
+   "headers": {
+    "x-forwarded-for": "1.1.1.1"
+   },
+   "ip": "203.0.113.5",
+   "source": "socket",
+   "trustedProxy": false
+  },
+  {
+   "remote": "10.0.0.2",
+   "headers": {
+    "x-forwarded-for": "198.51.100.7, 10.0.0.9"
+   },
+   "ip": "198.51.100.7",
+   "source": "x-forwarded-for",
+   "trustedProxy": true
+  },
+  {
+   "remote": "127.0.0.1",
+   "headers": {
+    "x-forwarded-for": "198.51.100.7, 203.0.113.9"
+   },
+   "ip": "203.0.113.9",
+   "source": "x-forwarded-for",
+   "trustedProxy": true
+  },
+  {
+   "remote": "127.0.0.1",
+   "headers": {},
+   "ip": "127.0.0.1",
+   "source": "loopback",
+   "trustedProxy": true
+  },
+  {
+   "remote": "::ffff:10.1.2.3",
+   "headers": {
+    "x-real-ip": "198.51.100.8"
+   },
+   "ip": "198.51.100.8",
+   "source": "x-real-ip",
+   "trustedProxy": true
+  },
+  {
+   "remote": "10.0.0.2",
+   "headers": {
+    "cf-connecting-ip": "198.51.100.9",
+    "x-real-ip": "198.51.100.8"
+   },
+   "ip": "198.51.100.9",
+   "source": "cf-connecting-ip",
+   "trustedProxy": true
+  },
+  {
+   "remote": "10.0.0.2",
+   "headers": {
+    "x-forwarded-for": "10.0.0.5, 192.168.1.1"
+   },
+   "ip": "10.0.0.2",
+   "source": "socket",
+   "trustedProxy": true
+  },
+  {
+   "remote": "192.168.1.1",
+   "headers": {
+    "x-forwarded-for": "[2001:db8::7]"
+   },
+   "ip": "2001:db8::7",
+   "source": "x-forwarded-for",
+   "trustedProxy": true
+  },
+  {
+   "remote": "172.20.0.1",
+   "headers": {
+    "x-forwarded-for": "198.51.100.7:4567"
+   },
+   "ip": "198.51.100.7",
+   "source": "x-forwarded-for",
+   "trustedProxy": true
+  },
+  {
+   "remote": "8.8.8.8",
+   "headers": {},
+   "ip": "8.8.8.8",
+   "source": "socket",
+   "trustedProxy": false
+  }
+ ]
+}

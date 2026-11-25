@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * SecureNow for PHP: runtime CLI.
+ *   vendor/bin/securenow help
+ */
+
+if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
+    http_response_code(404);
+    exit;
+}
+
+// The CLI drives the SDK itself: no auto-start when Composer's autoloader loads.
+putenv('SECURENOW_AUTOSTART=0');
+$_SERVER['SECURENOW_AUTOSTART'] = '0';
+
+$autoloaders = [
+    // Set by Composer's vendor/bin proxy: right even when the package is a symlink.
+    $GLOBALS['_composer_autoload_path'] ?? '',
+    __DIR__ . '/../../../autoload.php', // vendor/securenow/securenow/bin -> vendor/autoload.php
+    __DIR__ . '/../vendor/autoload.php',
+];
+foreach ($autoloaders as $autoloader) {
+    if (is_file($autoloader)) {
+        require $autoloader;
+        break;
+    }
+}
+if (!class_exists(\SecureNow\Cli\App::class)) {
+    require __DIR__ . '/../prepend.php';
+}
+
+exit(\SecureNow\Cli\App::main($argv));

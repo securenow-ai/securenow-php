@@ -1,0 +1,56 @@
+{
+    "name": "securenow/securenow",
+    "description": "SecureNow for PHP: traces, logs, request capture with redaction, and an in-app firewall (blocklist, allowlist, rate limits, challenges, scraper blocking, session revocation) for Laravel, Symfony, Slim, WordPress and plain PHP.",
+    "type": "library",
+    "license": "ISC",
+    "keywords": [
+        "security",
+        "firewall",
+        "waf",
+        "observability",
+        "opentelemetry",
+        "tracing",
+        "logging",
+        "rate-limit",
+        "laravel",
+        "symfony",
+        "wordpress",
+        "securenow"
+    ],
+    "homepage": "https://securenow.ai",
+    "support": {
+        "docs": "https://securenow.ai/docs/php",
+        "email": "contact@securenow.ai"
+    },
+    "require": {
+        "php": ">=8.0",
+        "ext-json": "*"
+    },
+    "suggest": {
+        "ext-curl": "Faster, parallel export of telemetry (falls back to PHP streams without it).",
+        "ext-apcu": "Shared in-memory firewall state and rate-limit counters across PHP-FPM workers.",
+        "ext-opentelemetry": "Zero-code spans for frameworks, databases and HTTP clients (OpenTelemetry auto-instrumentation).",
+        "open-telemetry/sdk": "Required with ext-opentelemetry so OpenTelemetry spans are exported through SecureNow."
+    },
+    "autoload": {
+        "psr-4": {
+            "SecureNow\\": "src/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "bin": [
+        "bin/securenow"
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SecureNow\\Integrations\\Laravel\\SecureNowServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "php tests/run.php"
+    }
+}
